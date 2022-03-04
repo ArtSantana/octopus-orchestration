@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ContainersController {
 
     @Autowired
-    ContainersService containersService;
+    private ContainersService containersService;
 
     @GetMapping
     public List<Container> listAllContainers()  {

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ContainersService {
 
-    final DefaultDockerClient dockerClient = DockerClient.init();
+    private final DefaultDockerClient dockerClient = DockerClient.init();
 
     public List<Container> listAll()  {
         try {

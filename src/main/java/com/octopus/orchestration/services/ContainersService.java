@@ -35,14 +35,6 @@ public class ContainersService {
         }
     }
 
-    public void delete(String id) {
-        try {
-            dockerClient.removeContainer(id);
-        } catch (DockerException | InterruptedException e) {
-            throw new ContainersException(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
     public String getLogs(String id) {
         try (LogStream stream = dockerClient.logs(id, LogsParam.stdout(), LogsParam.stderr())) {
             return stream.readFully();
@@ -51,4 +43,12 @@ public class ContainersService {
         }
     }
 
+    public String delete(String id) {
+        try {
+            dockerClient.removeContainer(id);
+            return id;
+        } catch (DockerException | InterruptedException e) {
+            throw new ContainersException(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 }

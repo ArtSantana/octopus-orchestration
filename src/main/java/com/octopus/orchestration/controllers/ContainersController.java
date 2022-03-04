@@ -37,6 +37,6 @@ public class ContainersController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable String id) {
-        return ResponseEntity.ok(id);
+        return ResponseEntity.ok(containersService.delete(id));
     }
 }

@@ -23,7 +23,7 @@ public class ContainersService {
         try {
             return dockerClient.listContainers(ListContainersParam.allContainers());
         } catch (DockerException | InterruptedException e) {
-            throw new ContainersException(e.getMessage(), HttpStatus.BAD_REQUEST);
+            throw new ContainersException("Failed to list all containers", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -31,7 +31,7 @@ public class ContainersService {
         try {
             return dockerClient.inspectContainer(id);
         } catch (DockerException | InterruptedException e) {
-            throw new ContainersException(e.getMessage(), HttpStatus.BAD_REQUEST);
+            throw new ContainersException("Failed to inspect container with id = " + id, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -39,7 +39,7 @@ public class ContainersService {
         try (LogStream stream = dockerClient.logs(id, LogsParam.stdout(), LogsParam.stderr())) {
             return stream.readFully();
         } catch (DockerException | InterruptedException e) {
-            throw new ContainersException(e.getMessage(), HttpStatus.BAD_REQUEST);
+            throw new ContainersException("Failed to get container logs with id = " + id, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -48,7 +48,7 @@ public class ContainersService {
             dockerClient.removeContainer(id);
             return id;
         } catch (DockerException | InterruptedException e) {
-            throw new ContainersException(e.getMessage(), HttpStatus.BAD_REQUEST);
+            throw new ContainersException("Failed to delete container with id = " + id, HttpStatus.BAD_REQUEST);
         }
     }
 }

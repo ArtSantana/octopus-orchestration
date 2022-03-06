@@ -9,7 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RestController public class ContainersController {
+@RestController
+public class ContainersController {
 	private static final Logger LOGGER = Logger.getLogger(ContainersController.class);
 
 	@Autowired private ContainersService containersService;

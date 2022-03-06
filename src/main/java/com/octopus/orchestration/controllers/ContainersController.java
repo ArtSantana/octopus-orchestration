@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController public class ContainersController {
-	Logger logger = Logger.getLogger(ContainersController.class);
+	private static final Logger LOGGER = Logger.getLogger(ContainersController.class);
 
 	@Autowired private ContainersService containersService;
 
 	@GetMapping public List<Container> listAllContainers() {
-		logger.info("[GET] - listAllContainers");
+		LOGGER.info("[GET] - listAllContainers");
 		return containersService.listAll();
 	}
 }

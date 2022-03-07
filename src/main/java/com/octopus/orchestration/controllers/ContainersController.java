@@ -19,25 +19,30 @@ import java.util.List;
 public class ContainersController {
 	private static final Logger LOGGER = Logger.getLogger(ContainersController.class);
 
-	@Autowired private ContainersService containersService;
+	@Autowired
+    private ContainersService containersService;
 
     @GetMapping
     public ResponseEntity<List<Container>> listAll()  {
+        LOGGER.info("[GET] - listAll");
         return ResponseEntity.ok(containersService.listAll());
     }
 
     @GetMapping("/inspect/{id}")
     public ResponseEntity<ContainerInfo> inspect(@PathVariable String id) {
+        LOGGER.info("[GET] - inspect");
         return ResponseEntity.ok(containersService.inspect(id));
     }
 
     @GetMapping("/logs/{id}")
     public ResponseEntity<String> getLogs(@PathVariable String id) {
+        LOGGER.info("[GET] - getLogs");
         return ResponseEntity.ok(containersService.getLogs(id));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable String id) {
+        LOGGER.info("[DELETE] - delete");
         return ResponseEntity.ok(containersService.delete(id));
     }
 }

@@ -28,9 +28,9 @@ import com.octopus.orchestration.services.ContainersService;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
-public class ContainersControllerTest {
+class ContainersControllerTest {
 	@MockBean
-	ContainersService containersService;
+	private ContainersService containersService;
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -38,7 +38,7 @@ public class ContainersControllerTest {
 	private static URI uri;
 
 	@BeforeAll
-	public static void setup() throws URISyntaxException {
+	static void setup() throws URISyntaxException {
 		uri = new URI("/containers");
 	}
 
@@ -49,6 +49,34 @@ public class ContainersControllerTest {
 				.andExpect(status().isOk());
 
 		Mockito.verify(containersService, times(1)).listAll();
+	}
+
+	@Test
+	void testListAllByStatusActive() throws Exception {
+		mockMvc.perform(get(uri + "?status=active"))
+				.andDo(print())
+				.andExpect(status().isOk());
+
+		Mockito.verify(containersService, times(1)).listAll("active");
+	}
+
+	@Test
+	void testListAllByStatusInctive() throws Exception {
+		mockMvc.perform(get(uri + "?status=inactive"))
+				.andDo(print())
+				.andExpect(status().isOk());
+
+		Mockito.verify(containersService, times(1)).listAll("inactive");
+	}
+
+	@Test
+	void testListAllByWrongStatusShouldThrowException() throws Exception {
+		when(containersService.listAll(anyString())).thenThrow(new BaseException("some exception message", HttpStatus.BAD_REQUEST));
+		mockMvc.perform(get(uri + "?status=wrong-status"))
+				.andDo(print())
+				.andExpect(status().isBadRequest());
+
+		Mockito.verify(containersService, times(1)).listAll("wrong-status");
 	}
 
 	@Test

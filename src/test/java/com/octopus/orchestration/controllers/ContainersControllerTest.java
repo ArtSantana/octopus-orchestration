@@ -23,7 +23,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import com.octopus.orchestration.exceptions.ContainersException;
+import com.octopus.orchestration.exceptions.DockerBaseException;
 import com.octopus.orchestration.services.ContainersService;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
@@ -53,10 +53,10 @@ public class ContainersControllerTest {
 
 	@Test
 	void testListAllShouldThrowException() throws Exception {
-		when(containersService.listAll()).thenThrow(new ContainersException("some exception message", HttpStatus.BAD_REQUEST));
+		when(containersService.listAll()).thenThrow(new DockerBaseException("some exception message", HttpStatus.INTERNAL_SERVER_ERROR));
 		mockMvc.perform(get(uri))
 				.andDo(print())
-				.andExpect(status().isBadRequest());
+				.andExpect(status().isInternalServerError());
 	}
 
 	@Test
@@ -70,10 +70,10 @@ public class ContainersControllerTest {
 
 	@Test
 	void testInspectShouldThrowException() throws Exception {
-		when(containersService.inspect(anyString())).thenThrow(new ContainersException("some exception message", HttpStatus.BAD_REQUEST));
+		when(containersService.inspect(anyString())).thenThrow(new DockerBaseException("some exception message", HttpStatus.INTERNAL_SERVER_ERROR));
 		mockMvc.perform(get(uri + "/inspect/some-container-id"))
 				.andDo(print())
-				.andExpect(status().isBadRequest());
+				.andExpect(status().isInternalServerError());
 	}
 
 	@Test
@@ -87,10 +87,10 @@ public class ContainersControllerTest {
 
 	@Test
 	void testGetLogsShouldThrowException() throws Exception {
-		when(containersService.getLogs(anyString())).thenThrow(new ContainersException("some exception message", HttpStatus.BAD_REQUEST));
+		when(containersService.getLogs(anyString())).thenThrow(new DockerBaseException("some exception message", HttpStatus.INTERNAL_SERVER_ERROR));
 		mockMvc.perform(get(uri + "/logs/some-container-id"))
 				.andDo(print())
-				.andExpect(status().isBadRequest());
+				.andExpect(status().isInternalServerError());
 	}
 
 	@Test
@@ -111,9 +111,9 @@ public class ContainersControllerTest {
 
 	@Test
 	void testDeleteShouldThrowException() throws Exception {
-		when(containersService.delete(anyString())).thenThrow(new ContainersException("some exception message", HttpStatus.BAD_REQUEST));
+		when(containersService.delete(anyString())).thenThrow(new DockerBaseException("some exception message", HttpStatus.INTERNAL_SERVER_ERROR));
 		mockMvc.perform(delete(uri + "/some-container-id"))
 				.andDo(print())
-				.andExpect(status().isBadRequest());
+				.andExpect(status().isInternalServerError());
 	}
 }

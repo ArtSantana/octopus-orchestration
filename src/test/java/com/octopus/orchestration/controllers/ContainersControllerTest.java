@@ -1,7 +1,8 @@
 package com.octopus.orchestration.controllers;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -21,9 +22,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 
-import com.octopus.orchestration.exceptions.DockerBaseException;
+import com.octopus.orchestration.exceptions.BaseException;
 import com.octopus.orchestration.services.ContainersService;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
@@ -53,7 +53,7 @@ public class ContainersControllerTest {
 
 	@Test
 	void testListAllShouldThrowException() throws Exception {
-		when(containersService.listAll()).thenThrow(new DockerBaseException("some exception message", HttpStatus.INTERNAL_SERVER_ERROR));
+		when(containersService.listAll()).thenThrow(new BaseException("some exception message", HttpStatus.INTERNAL_SERVER_ERROR));
 		mockMvc.perform(get(uri))
 				.andDo(print())
 				.andExpect(status().isInternalServerError());
@@ -70,7 +70,7 @@ public class ContainersControllerTest {
 
 	@Test
 	void testInspectShouldThrowException() throws Exception {
-		when(containersService.inspect(anyString())).thenThrow(new DockerBaseException("some exception message", HttpStatus.INTERNAL_SERVER_ERROR));
+		when(containersService.inspect(anyString())).thenThrow(new BaseException("some exception message", HttpStatus.INTERNAL_SERVER_ERROR));
 		mockMvc.perform(get(uri + "/inspect/some-container-id"))
 				.andDo(print())
 				.andExpect(status().isInternalServerError());
@@ -87,7 +87,7 @@ public class ContainersControllerTest {
 
 	@Test
 	void testGetLogsShouldThrowException() throws Exception {
-		when(containersService.getLogs(anyString())).thenThrow(new DockerBaseException("some exception message", HttpStatus.INTERNAL_SERVER_ERROR));
+		when(containersService.getLogs(anyString())).thenThrow(new BaseException("some exception message", HttpStatus.INTERNAL_SERVER_ERROR));
 		mockMvc.perform(get(uri + "/logs/some-container-id"))
 				.andDo(print())
 				.andExpect(status().isInternalServerError());
@@ -95,25 +95,22 @@ public class ContainersControllerTest {
 
 	@Test
 	void testDelete() throws Exception {
-		when(containersService.delete(anyString())).thenReturn("some-container-id");
+		doNothing().when(containersService).delete(anyString());
 
-		MvcResult result =
-				mockMvc.perform(delete(uri + "/some-container-id"))
-						.andDo(print())
-						.andExpect(status().isOk())
-						.andReturn();
-
-		String response = result.getResponse().getContentAsString();
+		mockMvc.perform(delete(uri + "/some-container-id"))
+				.andDo(print())
+				.andExpect(status().isNoContent())
+				.andReturn();
 
 		Mockito.verify(containersService, times(1)).delete("some-container-id");
-		assertEquals("some-container-id", response);
 	}
 
 	@Test
 	void testDeleteShouldThrowException() throws Exception {
-		when(containersService.delete(anyString())).thenThrow(new DockerBaseException("some exception message", HttpStatus.INTERNAL_SERVER_ERROR));
+		doThrow(BaseException.class).when(containersService).delete(anyString());
 		mockMvc.perform(delete(uri + "/some-container-id"))
 				.andDo(print())
 				.andExpect(status().isInternalServerError());
+		Mockito.verify(containersService, times(1)).delete("some-container-id");
 	}
 }

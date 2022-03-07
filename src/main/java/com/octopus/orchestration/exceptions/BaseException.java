@@ -11,7 +11,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class DockerBaseException extends RuntimeException {
+public class BaseException extends RuntimeException {
 
     @Serial
     private static final long serialVersionUID = 1L;

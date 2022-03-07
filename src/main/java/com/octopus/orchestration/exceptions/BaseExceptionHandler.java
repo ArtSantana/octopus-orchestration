@@ -6,12 +6,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
-public class DockerBaseExceptionHandler {
+public class BaseExceptionHandler {
 
-    private static final Logger LOGGER = Logger.getLogger(DockerBaseExceptionHandler.class);
+    private static final Logger LOGGER = Logger.getLogger(BaseExceptionHandler.class);
 
-    @ExceptionHandler({DockerBaseException.class})
-    protected ResponseEntity<Object> handleBaseException(DockerBaseException ex) {
+    @ExceptionHandler({BaseException.class})
+    protected ResponseEntity<Object> handleBaseException(BaseException ex) {
         LOGGER.error(ex.getMessage());
         return ResponseEntity.status(ex.getHttpStatus()).body(ex.getMessage());
     }

@@ -19,9 +19,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import com.octopus.orchestration.exceptions.ContainersException;
 import com.octopus.orchestration.services.ContainersService;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
@@ -50,6 +52,14 @@ public class ContainersControllerTest {
 	}
 
 	@Test
+	void testListAllShouldThrowException() throws Exception {
+		when(containersService.listAll()).thenThrow(new ContainersException("some exception message", HttpStatus.BAD_REQUEST));
+		mockMvc.perform(get(uri))
+				.andDo(print())
+				.andExpect(status().isBadRequest());
+	}
+
+	@Test
 	void testInspect() throws Exception {
 		mockMvc.perform(get(uri + "/inspect/some-container-id"))
 				.andDo(print())
@@ -59,12 +69,28 @@ public class ContainersControllerTest {
 	}
 
 	@Test
+	void testInspectShouldThrowException() throws Exception {
+		when(containersService.inspect(anyString())).thenThrow(new ContainersException("some exception message", HttpStatus.BAD_REQUEST));
+		mockMvc.perform(get(uri + "/inspect/some-container-id"))
+				.andDo(print())
+				.andExpect(status().isBadRequest());
+	}
+
+	@Test
 	void testGetLogs() throws Exception {
 		mockMvc.perform(get(uri + "/logs/some-container-id"))
 				.andDo(print())
 				.andExpect(status().isOk());
 
 		Mockito.verify(containersService, times(1)).getLogs("some-container-id");
+	}
+
+	@Test
+	void testGetLogsShouldThrowException() throws Exception {
+		when(containersService.getLogs(anyString())).thenThrow(new ContainersException("some exception message", HttpStatus.BAD_REQUEST));
+		mockMvc.perform(get(uri + "/logs/some-container-id"))
+				.andDo(print())
+				.andExpect(status().isBadRequest());
 	}
 
 	@Test
@@ -81,5 +107,13 @@ public class ContainersControllerTest {
 
 		Mockito.verify(containersService, times(1)).delete("some-container-id");
 		assertEquals("some-container-id", response);
+	}
+
+	@Test
+	void testDeleteShouldThrowException() throws Exception {
+		when(containersService.delete(anyString())).thenThrow(new ContainersException("some exception message", HttpStatus.BAD_REQUEST));
+		mockMvc.perform(delete(uri + "/some-container-id"))
+				.andDo(print())
+				.andExpect(status().isBadRequest());
 	}
 }

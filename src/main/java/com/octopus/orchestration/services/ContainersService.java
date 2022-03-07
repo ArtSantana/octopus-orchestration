@@ -1,5 +1,10 @@
 package com.octopus.orchestration.services;
 
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+
 import com.octopus.orchestration.dockerclient.DockerClient;
 import com.octopus.orchestration.exceptions.ContainersException;
 import com.spotify.docker.client.DefaultDockerClient;
@@ -9,10 +14,6 @@ import com.spotify.docker.client.LogStream;
 import com.spotify.docker.client.exceptions.DockerException;
 import com.spotify.docker.client.messages.Container;
 import com.spotify.docker.client.messages.ContainerInfo;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class ContainersService {

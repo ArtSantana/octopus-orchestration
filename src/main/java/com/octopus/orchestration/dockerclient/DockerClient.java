@@ -1,8 +1,9 @@
 package com.octopus.orchestration.dockerclient;
 
+import org.springframework.stereotype.Component;
+
 import com.octopus.orchestration.utils.ConfigService;
 import com.spotify.docker.client.DefaultDockerClient;
-import org.springframework.stereotype.Component;
 
 @Component
 public class DockerClient {

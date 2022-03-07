@@ -1,10 +1,9 @@
 package com.octopus.orchestration.exceptions;
 
+import org.apache.log4j.Logger;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import org.apache.log4j.Logger;
 
 @RestControllerAdvice
 public class ContainersExceptionHandler {

@@ -1,8 +1,9 @@
 package com.octopus.orchestration.exceptions;
 
+import java.io.Serial;
+
 import org.springframework.http.HttpStatus;
 
-import java.io.Serial;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

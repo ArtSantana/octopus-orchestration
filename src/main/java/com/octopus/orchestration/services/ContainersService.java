@@ -21,7 +21,7 @@ import com.spotify.docker.client.messages.ContainerInfo;
 @Service
 public class ContainersService {
     
-    private static final String CONTAINER_NOT_FOUND = "Container not found";
+    private static final String CONTAINER_NOT_FOUND = "Container not found. Id = ";
 
     private final DefaultDockerClient dockerClient = DockerClient.init();
 
@@ -54,7 +54,7 @@ public class ContainersService {
         try {
             return dockerClient.inspectContainer(id);
         } catch(ContainerNotFoundException e) {
-            throw new BaseException(CONTAINER_NOT_FOUND, HttpStatus.NOT_FOUND);
+            throw new BaseException(CONTAINER_NOT_FOUND + id, HttpStatus.NOT_FOUND);
         } catch (DockerException | InterruptedException e) {
             throw new BaseException("Failed to inspect container with id = " + id, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -64,7 +64,7 @@ public class ContainersService {
         try (LogStream stream = dockerClient.logs(id, LogsParam.stdout(), LogsParam.stderr())) {
             return stream.readFully();
         } catch(ContainerNotFoundException e) {
-            throw new BaseException(CONTAINER_NOT_FOUND, HttpStatus.NOT_FOUND);
+            throw new BaseException(CONTAINER_NOT_FOUND + id, HttpStatus.NOT_FOUND);
         } catch (DockerException | InterruptedException e) {
             throw new BaseException("Failed to get container logs with id = " + id, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -74,7 +74,7 @@ public class ContainersService {
         try {
             dockerClient.removeContainer(id);
         } catch(ContainerNotFoundException e ) {
-            throw new BaseException(CONTAINER_NOT_FOUND, HttpStatus.NOT_FOUND);
+            throw new BaseException(CONTAINER_NOT_FOUND + id, HttpStatus.NOT_FOUND);
         } catch (DockerException | InterruptedException e) {
             throw new BaseException("Failed to delete container with id = " + id, HttpStatus.INTERNAL_SERVER_ERROR);
         } 

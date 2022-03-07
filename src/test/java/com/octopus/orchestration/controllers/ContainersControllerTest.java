@@ -107,7 +107,7 @@ public class ContainersControllerTest {
 
 	@Test
 	void testDeleteShouldThrowException() throws Exception {
-		doThrow(BaseException.class).when(containersService).delete(anyString());
+		doThrow(new BaseException("some exception message", HttpStatus.INTERNAL_SERVER_ERROR)).when(containersService).delete(anyString());
 		mockMvc.perform(delete(uri + "/some-container-id"))
 				.andDo(print())
 				.andExpect(status().isInternalServerError());

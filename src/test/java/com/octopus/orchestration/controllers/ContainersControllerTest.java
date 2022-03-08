@@ -61,7 +61,7 @@ class ContainersControllerTest {
 	}
 
 	@Test
-	void testListAllByStatusInctive() throws Exception {
+	void testListAllByStatusInactive() throws Exception {
 		mockMvc.perform(get(uri + "?status=inactive"))
 				.andDo(print())
 				.andExpect(status().isOk());

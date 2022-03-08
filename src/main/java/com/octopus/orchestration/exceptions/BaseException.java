@@ -1,5 +1,7 @@
 package com.octopus.orchestration.exceptions;
 
+import java.io.Serial;
+
 import org.springframework.http.HttpStatus;
 
 import lombok.AllArgsConstructor;
@@ -9,8 +11,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class ContainersException extends RuntimeException {
+public class BaseException extends RuntimeException {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private String message;

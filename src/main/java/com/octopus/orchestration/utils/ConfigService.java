@@ -5,6 +5,8 @@ import org.apache.log4j.Logger;
 public class ConfigService {
 	private static final Logger LOGGER = Logger.getLogger(ConfigService.class);
 
+	private ConfigService(){}
+
 	public static String getValue(String key, String defaultValue) {
 		String envValue = System.getenv(key);
 		if (envValue != null && !envValue.isBlank()) {

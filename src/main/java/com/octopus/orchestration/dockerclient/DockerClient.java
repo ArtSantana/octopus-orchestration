@@ -1,15 +1,16 @@
 package com.octopus.orchestration.dockerclient;
 
+import org.springframework.stereotype.Component;
+
 import com.octopus.orchestration.utils.ConfigService;
 import com.spotify.docker.client.DefaultDockerClient;
-import org.springframework.stereotype.Component;
 
 @Component
 public class DockerClient {
 
-    private DockerClient() {}
+    private final DefaultDockerClient defaultDockerClient = new DefaultDockerClient(ConfigService.getValue("docker_host", "unix:///var/run/docker.sock"));
 
-    public static DefaultDockerClient init() {
-        return new DefaultDockerClient(ConfigService.getValue("docker_host", "unix:///var/run/docker.sock"));
+    public DefaultDockerClient getClient() {
+        return defaultDockerClient;
     }
 }

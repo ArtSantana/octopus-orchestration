@@ -8,9 +8,9 @@ import com.spotify.docker.client.DefaultDockerClient;
 @Component
 public class DockerClient {
 
-    private DockerClient() {}
+    private final DefaultDockerClient defaultDockerClient = new DefaultDockerClient(ConfigService.getValue("docker_host", "unix:///var/run/docker.sock"));
 
-    public static DefaultDockerClient init() {
-        return new DefaultDockerClient(ConfigService.getValue("docker_host", "unix:///var/run/docker.sock"));
+    public DefaultDockerClient getClient() {
+        return defaultDockerClient;
     }
 }

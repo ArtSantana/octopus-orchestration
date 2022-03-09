@@ -77,7 +77,55 @@ public class ContainersService {
         } catch(ContainerNotFoundException e ) {
             throw new BaseException(CONTAINER_NOT_FOUND + id, HttpStatus.NOT_FOUND);
         } catch (DockerException | InterruptedException e) {
-            throw new BaseException("Failed to delete container with id = " + id, HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new BaseException("Failed to remove container with id = " + id, HttpStatus.INTERNAL_SERVER_ERROR);
         } 
+    }
+
+    public void start(List<String> containersIds) {
+        containersIds.forEach(containerId -> {
+            try {
+                dockerClient.getClient().startContainer(containerId);
+            } catch(ContainerNotFoundException e ) {
+                throw new BaseException(CONTAINER_NOT_FOUND + containerId, HttpStatus.NOT_FOUND);
+            } catch (DockerException | InterruptedException e) {
+                throw new BaseException("Failed to start container with id = " + containerId, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        });
+    }
+
+    public void stop(List<String> containersIds) {
+        containersIds.forEach(containerId -> {
+            try {
+                dockerClient.getClient().stopContainer(containerId, 5);
+            } catch(ContainerNotFoundException e ) {
+                throw new BaseException(CONTAINER_NOT_FOUND + containerId, HttpStatus.NOT_FOUND);
+            } catch (DockerException | InterruptedException e) {
+                throw new BaseException("Failed to stop container with id = " + containerId, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        });
+    }
+
+    public void kill(List<String> containersIds) {
+        containersIds.forEach(containerId -> {
+            try {
+                dockerClient.getClient().killContainer(containerId);
+            } catch(ContainerNotFoundException e ) {
+                throw new BaseException(CONTAINER_NOT_FOUND + containerId, HttpStatus.NOT_FOUND);
+            } catch (DockerException | InterruptedException e) {
+                throw new BaseException("Failed to kill container with id = " + containerId, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        });
+    }
+
+    public void restart(List<String> containersIds) {
+        containersIds.forEach(containerId -> {
+            try {
+                dockerClient.getClient().restartContainer(containerId, 5);
+            } catch(ContainerNotFoundException e ) {
+                throw new BaseException(CONTAINER_NOT_FOUND + containerId, HttpStatus.NOT_FOUND);
+            } catch (DockerException | InterruptedException e) {
+                throw new BaseException("Failed to restart container with id = " + containerId, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        });
     }
 }

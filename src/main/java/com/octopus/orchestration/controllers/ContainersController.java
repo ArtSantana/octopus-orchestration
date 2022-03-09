@@ -9,10 +9,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.octopus.orchestration.models.ContainerRequest;
 import com.octopus.orchestration.services.ContainersService;
 import com.spotify.docker.client.messages.Container;
 import com.spotify.docker.client.messages.ContainerInfo;
@@ -53,6 +56,34 @@ public class ContainersController {
     public ResponseEntity<Void> delete(@PathVariable String id) {
         LOGGER.info("[DELETE] - delete");
         containersService.delete(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @PutMapping("/start")
+    public ResponseEntity<Void> start(@RequestBody ContainerRequest containerRequest) {
+        LOGGER.info("[PUT] - start");
+        containersService.start(containerRequest.getContainersIds());
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @PutMapping("/stop")
+    public ResponseEntity<Void> stop(@RequestBody ContainerRequest containerRequest) {
+        LOGGER.info("[PUT] - stop");
+        containersService.stop(containerRequest.getContainersIds());
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @PutMapping("/kill")
+    public ResponseEntity<Void> kill(@RequestBody ContainerRequest containerRequest) {
+        LOGGER.info("[PUT] - kill");
+        containersService.kill(containerRequest.getContainersIds());
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @PutMapping("/restart")
+    public ResponseEntity<Void> restart(@RequestBody ContainerRequest containerRequest) {
+        LOGGER.info("[PUT] - restart");
+        containersService.restart(containerRequest.getContainersIds());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

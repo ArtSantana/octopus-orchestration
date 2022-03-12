@@ -14,7 +14,6 @@ import com.spotify.docker.client.DockerClient.ListContainersParam;
 import com.spotify.docker.client.DockerClient.LogsParam;
 import com.spotify.docker.client.LogStream;
 import com.spotify.docker.client.exceptions.ContainerNotFoundException;
-import com.spotify.docker.client.exceptions.DockerException;
 import com.spotify.docker.client.messages.Container;
 import com.spotify.docker.client.messages.ContainerInfo;
 
@@ -29,7 +28,7 @@ public class ContainersService {
     public List<Container> listAll()  {
         try {
             return dockerClient.getClient().listContainers(ListContainersParam.allContainers());
-        } catch (DockerException | InterruptedException e) {
+        } catch (Exception e) {
             throw new BaseException("Failed to list all containers", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -45,10 +44,10 @@ public class ContainersService {
                     return dockerClient.getClient().listContainers(ListContainersParam.withStatusExited());
                 }
             }
-            throw new DockerIllegalArgumentException("Invalid container status");
-        } catch (DockerException | InterruptedException e) {
+        } catch (Exception e) {
             throw new BaseException("Failed to list all containers", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        throw new DockerIllegalArgumentException("Invalid container status");
     }
 
     public ContainerInfo inspect(String id) {
@@ -56,7 +55,7 @@ public class ContainersService {
             return dockerClient.getClient().inspectContainer(id);
         } catch(ContainerNotFoundException e) {
             throw new BaseException(CONTAINER_NOT_FOUND + id, HttpStatus.NOT_FOUND);
-        } catch (DockerException | InterruptedException e) {
+        } catch (Exception e) {
             throw new BaseException("Failed to inspect container with id = " + id, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -66,7 +65,7 @@ public class ContainersService {
             return stream.readFully();
         } catch(ContainerNotFoundException e) {
             throw new BaseException(CONTAINER_NOT_FOUND + id, HttpStatus.NOT_FOUND);
-        } catch (DockerException | InterruptedException e) {
+        } catch (Exception e) {
             throw new BaseException("Failed to get container logs with id = " + id, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -76,7 +75,7 @@ public class ContainersService {
             dockerClient.getClient().removeContainer(id);
         } catch(ContainerNotFoundException e ) {
             throw new BaseException(CONTAINER_NOT_FOUND + id, HttpStatus.NOT_FOUND);
-        } catch (DockerException | InterruptedException e) {
+        } catch (Exception e) {
             throw new BaseException("Failed to remove container with id = " + id, HttpStatus.INTERNAL_SERVER_ERROR);
         } 
     }
@@ -87,7 +86,7 @@ public class ContainersService {
                 dockerClient.getClient().startContainer(containerId);
             } catch(ContainerNotFoundException e ) {
                 throw new BaseException(CONTAINER_NOT_FOUND + containerId, HttpStatus.NOT_FOUND);
-            } catch (DockerException | InterruptedException e) {
+            } catch (Exception e) {
                 throw new BaseException("Failed to start container with id = " + containerId, HttpStatus.INTERNAL_SERVER_ERROR);
             }
         });
@@ -99,7 +98,7 @@ public class ContainersService {
                 dockerClient.getClient().stopContainer(containerId, 5);
             } catch(ContainerNotFoundException e ) {
                 throw new BaseException(CONTAINER_NOT_FOUND + containerId, HttpStatus.NOT_FOUND);
-            } catch (DockerException | InterruptedException e) {
+            } catch (Exception e) {
                 throw new BaseException("Failed to stop container with id = " + containerId, HttpStatus.INTERNAL_SERVER_ERROR);
             }
         });
@@ -111,7 +110,7 @@ public class ContainersService {
                 dockerClient.getClient().killContainer(containerId);
             } catch(ContainerNotFoundException e ) {
                 throw new BaseException(CONTAINER_NOT_FOUND + containerId, HttpStatus.NOT_FOUND);
-            } catch (DockerException | InterruptedException e) {
+            } catch (Exception e) {
                 throw new BaseException("Failed to kill container with id = " + containerId, HttpStatus.INTERNAL_SERVER_ERROR);
             }
         });
@@ -123,7 +122,7 @@ public class ContainersService {
                 dockerClient.getClient().restartContainer(containerId, 5);
             } catch(ContainerNotFoundException e ) {
                 throw new BaseException(CONTAINER_NOT_FOUND + containerId, HttpStatus.NOT_FOUND);
-            } catch (DockerException | InterruptedException e) {
+            } catch (Exception e) {
                 throw new BaseException("Failed to restart container with id = " + containerId, HttpStatus.INTERNAL_SERVER_ERROR);
             }
         });

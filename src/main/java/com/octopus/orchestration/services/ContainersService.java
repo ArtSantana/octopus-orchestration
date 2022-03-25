@@ -61,7 +61,7 @@ public class ContainersService {
         } catch(ContainerNotFoundException e) {
             throw new BaseException(CONTAINER_NOT_FOUND + id, HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            throw new BaseException("Failed to inspectContainer container with id = " + id, HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new BaseException("Failed to inspect container with id = " + id, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -92,7 +92,7 @@ public class ContainersService {
             } catch(ContainerNotFoundException e ) {
                 throw new BaseException(CONTAINER_NOT_FOUND + containerId, HttpStatus.NOT_FOUND);
             } catch (Exception e) {
-                throw new BaseException("Failed to startContainer container with id = " + containerId, HttpStatus.INTERNAL_SERVER_ERROR);
+                throw new BaseException("Failed to start container with id = " + containerId, HttpStatus.INTERNAL_SERVER_ERROR);
             }
         });
     }
@@ -104,7 +104,7 @@ public class ContainersService {
             } catch(ContainerNotFoundException e ) {
                 throw new BaseException(CONTAINER_NOT_FOUND + containerId, HttpStatus.NOT_FOUND);
             } catch (Exception e) {
-                throw new BaseException("Failed to stopContainer container with id = " + containerId, HttpStatus.INTERNAL_SERVER_ERROR);
+                throw new BaseException("Failed to stop container with id = " + containerId, HttpStatus.INTERNAL_SERVER_ERROR);
             }
         });
     }
@@ -116,7 +116,7 @@ public class ContainersService {
             } catch(ContainerNotFoundException e ) {
                 throw new BaseException(CONTAINER_NOT_FOUND + containerId, HttpStatus.NOT_FOUND);
             } catch (Exception e) {
-                throw new BaseException("Failed to killContainer container with id = " + containerId, HttpStatus.INTERNAL_SERVER_ERROR);
+                throw new BaseException("Failed to kill container with id = " + containerId, HttpStatus.INTERNAL_SERVER_ERROR);
             }
         });
     }
@@ -128,7 +128,7 @@ public class ContainersService {
             } catch(ContainerNotFoundException e ) {
                 throw new BaseException(CONTAINER_NOT_FOUND + containerId, HttpStatus.NOT_FOUND);
             } catch (Exception e) {
-                throw new BaseException("Failed to restartContainer container with id = " + containerId, HttpStatus.INTERNAL_SERVER_ERROR);
+                throw new BaseException("Failed to restart container with id = " + containerId, HttpStatus.INTERNAL_SERVER_ERROR);
             }
         });
     }

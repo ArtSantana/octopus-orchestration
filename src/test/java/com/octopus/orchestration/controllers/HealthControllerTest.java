@@ -15,16 +15,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import com.octopus.orchestration.models.ContainerRequest;
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 class HealthControllerTest {
     @Autowired
     private MockMvc mockMvc;
-    private static URI uri;
 
-    private ContainerRequest containerRequest;
+    private static URI uri;
 
     @BeforeAll
     static void setup() throws URISyntaxException {

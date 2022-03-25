@@ -14,9 +14,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -28,7 +29,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.octopus.orchestration.exceptions.BaseException;
-import com.octopus.orchestration.models.ContainerRequest;
 import com.octopus.orchestration.services.ContainersService;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
@@ -45,49 +45,48 @@ class ContainersControllerTest {
 
 	private static URI uri;
 
-	private ContainerRequest containerRequest;
+	private static List<String> containersIds;
 
-	@BeforeEach
-	void setup() throws URISyntaxException {
+	@BeforeAll
+	static void setup() throws URISyntaxException {
 		uri = new URI("/containers");
-		containerRequest = new ContainerRequest();
-		containerRequest.setContainersIds(List.of("container-id-1", "container-id-2", "container-id-3", "container-id-4"));
+		containersIds = new ArrayList<>(List.of("container-id-1", "container-id-2", "container-id-3", "container-id-4"));
 	}
 
 	@Test
 	void testListAll() throws Exception {
 		mockMvc.perform(get(uri)).andExpect(status().isOk());
 
-		verify(containersService, times(1)).listAll();
+		verify(containersService, times(1)).listAllContainers();
 	}
 
 	@Test
 	void testListAllByStatusActive() throws Exception {
 		mockMvc.perform(get(uri + "?status=active")).andExpect(status().isOk());
 
-		verify(containersService, times(1)).listAll("active");
+		verify(containersService, times(1)).listAllContainers("active");
 	}
 
 	@Test
 	void testListAllByStatusInactive() throws Exception {
 		mockMvc.perform(get(uri + "?status=inactive")).andExpect(status().isOk());
 
-		verify(containersService, times(1)).listAll("inactive");
+		verify(containersService, times(1)).listAllContainers("inactive");
 	}
 
 	@Test
 	void testListAllByWrongStatusShouldThrowException() throws Exception {
-		when(containersService.listAll(anyString()))
+		when(containersService.listAllContainers(anyString()))
 				.thenThrow(new BaseException("some exception message", HttpStatus.BAD_REQUEST));
 
 		mockMvc.perform(get(uri + "?status=wrong-status")).andExpect(status().isBadRequest());
 
-		verify(containersService, times(1)).listAll("wrong-status");
+		verify(containersService, times(1)).listAllContainers("wrong-status");
 	}
 
 	@Test
 	void testListAllShouldThrowException() throws Exception {
-		when(containersService.listAll())
+		when(containersService.listAllContainers())
 				.thenThrow(new BaseException("some exception message", HttpStatus.INTERNAL_SERVER_ERROR));
 
 		mockMvc.perform(get(uri)).andExpect(status().isInternalServerError());
@@ -97,12 +96,12 @@ class ContainersControllerTest {
 	void testInspect() throws Exception {
 		mockMvc.perform(get(uri + "/inspect/some-container-id")).andExpect(status().isOk());
 
-		verify(containersService, times(1)).inspect("some-container-id");
+		verify(containersService, times(1)).inspectContainer("some-container-id");
 	}
 
 	@Test
 	void testInspectShouldThrowException() throws Exception {
-		when(containersService.inspect(anyString()))
+		when(containersService.inspectContainer(anyString()))
 				.thenThrow(new BaseException("some exception message", HttpStatus.INTERNAL_SERVER_ERROR));
 
 		mockMvc.perform(get(uri + "/inspect/some-container-id")).andExpect(status().isInternalServerError());
@@ -112,12 +111,12 @@ class ContainersControllerTest {
 	void testGetLogs() throws Exception {
 		mockMvc.perform(get(uri + "/logs/some-container-id")).andExpect(status().isOk());
 
-		verify(containersService, times(1)).getLogs("some-container-id");
+		verify(containersService, times(1)).getContainerLogs("some-container-id");
 	}
 
 	@Test
 	void testGetLogsShouldThrowException() throws Exception {
-		when(containersService.getLogs(anyString()))
+		when(containersService.getContainerLogs(anyString()))
 				.thenThrow(new BaseException("some exception message", HttpStatus.INTERNAL_SERVER_ERROR));
 
 		mockMvc.perform(get(uri + "/logs/some-container-id")).andExpect(status().isInternalServerError());
@@ -125,120 +124,120 @@ class ContainersControllerTest {
 
 	@Test
 	void testDelete() throws Exception {
-		doNothing().when(containersService).delete(anyString());
+		doNothing().when(containersService).deleteContainer(anyString());
 
 		mockMvc.perform(delete(uri + "/some-container-id")).andExpect(status().isNoContent());
 
-		verify(containersService, times(1)).delete("some-container-id");
+		verify(containersService, times(1)).deleteContainer("some-container-id");
 	}
 
 	@Test
 	void testDeleteShouldThrowException() throws Exception {
 		doThrow(new BaseException("some exception message", HttpStatus.INTERNAL_SERVER_ERROR))
-				.when(containersService).delete(anyString());
+				.when(containersService).deleteContainer(anyString());
 
 		mockMvc.perform(delete(uri + "/some-container-id")).andExpect(status().isInternalServerError());
 
-		verify(containersService, times(1)).delete("some-container-id");
+		verify(containersService, times(1)).deleteContainer("some-container-id");
 	}
 
 	@Test
 	void testStart() throws Exception {
-		doNothing().when(containersService).start(any());
+		doNothing().when(containersService).startContainer(any());
 
 		mockMvc.perform(put(uri + "/start")
 						.contentType(MediaType.APPLICATION_JSON)
-						.content(objectMapper.writeValueAsString(containerRequest)))
+						.content(objectMapper.writeValueAsString(containersIds)))
 				.andExpect(status().isNoContent());
 
-		verify(containersService, times(1)).start(containerRequest.getContainersIds());
+		verify(containersService, times(1)).startContainer(containersIds);
 	}
 
 	@Test
 	void testStartShouldThrowException() throws Exception {
 		doThrow(new BaseException("some exception message", HttpStatus.INTERNAL_SERVER_ERROR))
-				.when(containersService).start(any());
+				.when(containersService).startContainer(any());
 
 		mockMvc.perform(put(uri + "/start")
 						.contentType(MediaType.APPLICATION_JSON)
-						.content(objectMapper.writeValueAsString(containerRequest)))
+						.content(objectMapper.writeValueAsString(containersIds)))
 				.andExpect(status().isInternalServerError());
 
-		verify(containersService, times(1)).start(containerRequest.getContainersIds());
+		verify(containersService, times(1)).startContainer(containersIds);
 	}
 
 	@Test
 	void testStop() throws Exception {
-		doNothing().when(containersService).stop(any());
+		doNothing().when(containersService).stopContainer(any());
 
 		mockMvc.perform(put(uri + "/stop")
 						.contentType(MediaType.APPLICATION_JSON)
-						.content(objectMapper.writeValueAsString(containerRequest)))
+						.content(objectMapper.writeValueAsString(containersIds)))
 				.andExpect(status().isNoContent());
 
-		verify(containersService, times(1)).stop(containerRequest.getContainersIds());
+		verify(containersService, times(1)).stopContainer(containersIds);
 	}
 
 	@Test
 	void testStopShouldThrowException() throws Exception {
 		doThrow(new BaseException("some exception message", HttpStatus.INTERNAL_SERVER_ERROR))
-				.when(containersService).stop(any());
+				.when(containersService).stopContainer(any());
 
 		mockMvc.perform(put(uri + "/stop")
 						.contentType(MediaType.APPLICATION_JSON)
-						.content(objectMapper.writeValueAsString(containerRequest)))
+						.content(objectMapper.writeValueAsString(containersIds)))
 				.andExpect(status().isInternalServerError());
 
-		verify(containersService, times(1)).stop(containerRequest.getContainersIds());
+		verify(containersService, times(1)).stopContainer(containersIds);
 	}
 
 	@Test
 	void testKill() throws Exception {
-		doNothing().when(containersService).kill(any());
+		doNothing().when(containersService).killContainer(any());
 
 		mockMvc.perform(put(uri + "/kill")
 						.contentType(MediaType.APPLICATION_JSON)
-						.content(objectMapper.writeValueAsString(containerRequest)))
+						.content(objectMapper.writeValueAsString(containersIds)))
 				.andExpect(status().isNoContent());
 
-		verify(containersService, times(1)).kill(containerRequest.getContainersIds());
+		verify(containersService, times(1)).killContainer(containersIds);
 	}
 
 	@Test
 	void testKillShouldThrowException() throws Exception {
 		doThrow(new BaseException("some exception message", HttpStatus.INTERNAL_SERVER_ERROR))
-				.when(containersService).kill(any());
+				.when(containersService).killContainer(any());
 
 		mockMvc.perform(put(uri + "/kill")
 						.contentType(MediaType.APPLICATION_JSON)
-						.content(objectMapper.writeValueAsString(containerRequest)))
+						.content(objectMapper.writeValueAsString(containersIds)))
 				.andExpect(status().isInternalServerError());
 
-		verify(containersService, times(1)).kill(containerRequest.getContainersIds());
+		verify(containersService, times(1)).killContainer(containersIds);
 	}
 
 	@Test
 	void testRestart() throws Exception {
-		doNothing().when(containersService).restart(any());
+		doNothing().when(containersService).restartContainer(any());
 
 		mockMvc.perform(put(uri + "/restart")
 						.contentType(MediaType.APPLICATION_JSON)
-						.content(objectMapper.writeValueAsString(containerRequest)))
+						.content(objectMapper.writeValueAsString(containersIds)))
 				.andExpect(status().isNoContent());
 
-		verify(containersService, times(1)).restart(containerRequest.getContainersIds());
+		verify(containersService, times(1)).restartContainer(containersIds);
 	}
 
 	@Test
 	void testRestartShouldThrowException() throws Exception {
 		doThrow(new BaseException("some exception message", HttpStatus.INTERNAL_SERVER_ERROR))
-				.when(containersService).restart(any());
+				.when(containersService).restartContainer(any());
 
 		mockMvc.perform(put(uri + "/restart")
 						.contentType(MediaType.APPLICATION_JSON)
-						.content(objectMapper.writeValueAsString(containerRequest)))
+						.content(objectMapper.writeValueAsString(containersIds)))
 				.andExpect(status().isInternalServerError());
 
-		verify(containersService, times(1)).restart(containerRequest.getContainersIds());
+		verify(containersService, times(1)).restartContainer(containersIds);
 	}
 }

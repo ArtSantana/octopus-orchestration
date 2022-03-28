@@ -1,4 +1,4 @@
-# Octopus Orchestration
+# Octopus Orchestration [![Java CI with Maven](https://github.com/ArtSantana/octopus-orchestration/actions/workflows/maven.yml/badge.svg)](https://github.com/ArtSantana/octopus-orchestration/actions/workflows/maven.yml)
 
 API developed in order to manage local docker containers through a GUI.
 

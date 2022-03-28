@@ -63,29 +63,29 @@ public class ContainersController {
     }
 
     @PutMapping("/start")
-    public ResponseEntity<Void> startContainer(@RequestBody List<String> containersIds) {
-        LOGGER.info("[PUT] - startContainer");
+    public ResponseEntity<Void> startContainers(@RequestBody List<String> containersIds) {
+        LOGGER.info("[PUT] - startContainers");
         containersService.startContainer(containersIds);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PutMapping("/stop")
-    public ResponseEntity<Void> stopContainer(@RequestBody List<String> containersIds) {
-        LOGGER.info("[PUT] - stopContainer");
+    public ResponseEntity<Void> stopContainers(@RequestBody List<String> containersIds) {
+        LOGGER.info("[PUT] - stopContainers");
         containersService.stopContainer(containersIds);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PutMapping("/kill")
-    public ResponseEntity<Void> killContainer(@RequestBody List<String> containersIds) {
-        LOGGER.info("[PUT] - killContainer");
+    public ResponseEntity<Void> killContainers(@RequestBody List<String> containersIds) {
+        LOGGER.info("[PUT] - killContainers");
         containersService.killContainer(containersIds);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PutMapping("/restart")
-    public ResponseEntity<Void> restartContainer(@RequestBody List<String> containersIds) {
-        LOGGER.info("[PUT] - restartContainer");
+    public ResponseEntity<Void> restartContainers(@RequestBody List<String> containersIds) {
+        LOGGER.info("[PUT] - restartContainers");
         containersService.restartContainer(containersIds);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

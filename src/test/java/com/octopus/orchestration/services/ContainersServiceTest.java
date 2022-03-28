@@ -210,7 +210,7 @@ class ContainersServiceTest {
     @Test
     void testStart() throws DockerException, InterruptedException {
         doNothing().when(defaultDockerClient).startContainer(anyString());
-        assertThatCode(() -> containersService.startContainer(buildContainerRequest())).doesNotThrowAnyException();
+        assertThatCode(() -> containersService.startContainers(buildContainerRequest())).doesNotThrowAnyException();
     }
 
     @Test
@@ -219,8 +219,8 @@ class ContainersServiceTest {
         List<String> containersIds = buildContainerRequest();
         BaseException thrown =
                 assertThrows(BaseException.class,
-                        () -> containersService.startContainer(containersIds),
-                        "It was expected that startContainer() thrown an exception, " +
+                        () -> containersService.startContainers(containersIds),
+                        "It was expected that startContainers() thrown an exception, " +
                                 "due to an error in DefaultDockerClient");
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown.getHttpStatus());
     }
@@ -231,8 +231,8 @@ class ContainersServiceTest {
         List<String> containersIds = buildContainerRequest();
         BaseException thrown =
                 assertThrows(BaseException.class,
-                        () -> containersService.startContainer(containersIds),
-                        "It was expected that startContainer() thrown an exception, " +
+                        () -> containersService.startContainers(containersIds),
+                        "It was expected that startContainers() thrown an exception, " +
                                 "due to a not found container");
         assertEquals(HttpStatus.NOT_FOUND, thrown.getHttpStatus());
     }
@@ -240,7 +240,7 @@ class ContainersServiceTest {
     @Test
     void testStop() throws DockerException, InterruptedException {
         doNothing().when(defaultDockerClient).stopContainer(anyString(), anyInt());
-        assertThatCode(() -> containersService.stopContainer(buildContainerRequest())).doesNotThrowAnyException();
+        assertThatCode(() -> containersService.stopContainers(buildContainerRequest())).doesNotThrowAnyException();
     }
 
     @Test
@@ -249,8 +249,8 @@ class ContainersServiceTest {
         List<String> containersIds = buildContainerRequest();
         BaseException thrown =
                 assertThrows(BaseException.class,
-                        () -> containersService.stopContainer(containersIds),
-                        "It was expected that stopContainer() thrown an exception, " +
+                        () -> containersService.stopContainers(containersIds),
+                        "It was expected that stopContainers() thrown an exception, " +
                                 "due to an error in DefaultDockerClient");
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown.getHttpStatus());
     }
@@ -261,8 +261,8 @@ class ContainersServiceTest {
         List<String> containersIds = buildContainerRequest();
         BaseException thrown =
                 assertThrows(BaseException.class,
-                        () -> containersService.stopContainer(containersIds),
-                        "It was expected that stopContainer() thrown an exception, " +
+                        () -> containersService.stopContainers(containersIds),
+                        "It was expected that stopContainers() thrown an exception, " +
                                 "due to a not found container");
         assertEquals(HttpStatus.NOT_FOUND, thrown.getHttpStatus());
     }
@@ -270,7 +270,7 @@ class ContainersServiceTest {
     @Test
     void testKill() throws DockerException, InterruptedException {
         doNothing().when(defaultDockerClient).killContainer(anyString());
-        assertThatCode(() -> containersService.killContainer(buildContainerRequest())).doesNotThrowAnyException();
+        assertThatCode(() -> containersService.killContainers(buildContainerRequest())).doesNotThrowAnyException();
     }
 
     @Test
@@ -279,8 +279,8 @@ class ContainersServiceTest {
         List<String> containersIds = buildContainerRequest();
         BaseException thrown =
                 assertThrows(BaseException.class,
-                        () -> containersService.killContainer(containersIds),
-                        "It was expected that killContainer() thrown an exception, " +
+                        () -> containersService.killContainers(containersIds),
+                        "It was expected that killContainers() thrown an exception, " +
                                 "due to an error in DefaultDockerClient");
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown.getHttpStatus());
     }
@@ -291,16 +291,16 @@ class ContainersServiceTest {
         List<String> containersIds = buildContainerRequest();
         BaseException thrown =
                 assertThrows(BaseException.class,
-                        () -> containersService.killContainer(containersIds),
-                        "It was expected that killContainer() thrown an exception, " +
+                        () -> containersService.killContainers(containersIds),
+                        "It was expected that killContainers() thrown an exception, " +
                                 "due to a not found container");
         assertEquals(HttpStatus.NOT_FOUND, thrown.getHttpStatus());
     }
 
     @Test
     void testRestart() throws DockerException, InterruptedException {
-        doNothing().when(defaultDockerClient).restartContainer(anyString(), anyInt());
-        assertThatCode(() -> containersService.restartContainer(buildContainerRequest())).doesNotThrowAnyException();
+        doNothing().when(defaultDockerClient).restartContainers(anyString(), anyInt());
+        assertThatCode(() -> containersService.restartContainers(buildContainerRequest())).doesNotThrowAnyException();
     }
 
     @Test
@@ -309,8 +309,8 @@ class ContainersServiceTest {
         List<String> containersIds = buildContainerRequest();
         BaseException thrown =
                 assertThrows(BaseException.class,
-                        () -> containersService.restartContainer(containersIds),
-                        "It was expected that restartContainer() thrown an exception, " +
+                        () -> containersService.restartContainers(containersIds),
+                        "It was expected that restartContainers() thrown an exception, " +
                                 "due to an error in DefaultDockerClient");
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown.getHttpStatus());
     }
@@ -321,8 +321,8 @@ class ContainersServiceTest {
         List<String> containersIds = buildContainerRequest();
         BaseException thrown =
                 assertThrows(BaseException.class,
-                        () -> containersService.restartContainer(containersIds),
-                        "It was expected that restartContainer() thrown an exception, " +
+                        () -> containersService.restartContainers(containersIds),
+                        "It was expected that restartContainers() thrown an exception, " +
                                 "due to a not found container");
         assertEquals(HttpStatus.NOT_FOUND, thrown.getHttpStatus());
     }

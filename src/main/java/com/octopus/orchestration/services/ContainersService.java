@@ -85,7 +85,7 @@ public class ContainersService {
         }
     }
 
-    public void startContainer(List<String> containersIds) {
+    public void startContainers(List<String> containersIds) {
         containersIds.forEach(containerId -> {
             try {
                 dockerClient.getClient().startContainer(containerId);
@@ -97,7 +97,7 @@ public class ContainersService {
         });
     }
 
-    public void stopContainer(List<String> containersIds) {
+    public void stopContainers(List<String> containersIds) {
         containersIds.forEach(containerId -> {
             try {
                 dockerClient.getClient().stopContainer(containerId, 5);
@@ -109,7 +109,7 @@ public class ContainersService {
         });
     }
 
-    public void killContainer(List<String> containersIds) {
+    public void killContainers(List<String> containersIds) {
         containersIds.forEach(containerId -> {
             try {
                 dockerClient.getClient().killContainer(containerId);
@@ -121,7 +121,7 @@ public class ContainersService {
         });
     }
 
-    public void restartContainer(List<String> containersIds) {
+    public void restartContainers(List<String> containersIds) {
         containersIds.forEach(containerId -> {
             try {
                 dockerClient.getClient().restartContainer(containerId, 5);

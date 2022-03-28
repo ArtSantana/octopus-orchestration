@@ -299,7 +299,7 @@ class ContainersServiceTest {
 
     @Test
     void testRestart() throws DockerException, InterruptedException {
-        doNothing().when(defaultDockerClient).restartContainers(anyString(), anyInt());
+        doNothing().when(defaultDockerClient).restartContainer(anyString(), anyInt());
         assertThatCode(() -> containersService.restartContainers(buildContainerRequest())).doesNotThrowAnyException();
     }
 

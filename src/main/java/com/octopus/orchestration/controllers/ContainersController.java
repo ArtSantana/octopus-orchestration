@@ -65,28 +65,28 @@ public class ContainersController {
     @PutMapping("/start")
     public ResponseEntity<Void> startContainers(@RequestBody List<String> containersIds) {
         LOGGER.info("[PUT] - startContainers");
-        containersService.startContainer(containersIds);
+        containersService.startContainers(containersIds);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PutMapping("/stop")
     public ResponseEntity<Void> stopContainers(@RequestBody List<String> containersIds) {
         LOGGER.info("[PUT] - stopContainers");
-        containersService.stopContainer(containersIds);
+        containersService.stopContainers(containersIds);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PutMapping("/kill")
     public ResponseEntity<Void> killContainers(@RequestBody List<String> containersIds) {
         LOGGER.info("[PUT] - killContainers");
-        containersService.killContainer(containersIds);
+        containersService.killContainers(containersIds);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PutMapping("/restart")
     public ResponseEntity<Void> restartContainers(@RequestBody List<String> containersIds) {
         LOGGER.info("[PUT] - restartContainers");
-        containersService.restartContainer(containersIds);
+        containersService.restartContainers(containersIds);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
